@@ -10,7 +10,7 @@ $(function(){
     let calcArea = function (from_point, to_point) {
         return {
             left: Math.min(from_point.x, to_point.x),
-            top: Math.min(from_point.x, to_point.x),
+            top: Math.min(from_point.y, to_point.y),
             width: Math.abs(from_point.x - to_point.x),
             height: Math.abs(to_point.y - from_point.y)
         };
