@@ -1,0 +1,11 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "main": "main.js",
+  "dependencies": {
+    "electron": "^1.4.15",
+    "png-crop": "0.0.1",
+    "request": "^2.79.0",
+    "screencapture": "^0.3.0"
+  }
+}
