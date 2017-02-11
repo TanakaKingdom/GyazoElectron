@@ -1,16 +1,29 @@
 'use strict'
 
 const electron = require('electron');
+
 // アプリケーションを操作するモジュール
 const app = electron.app;
 // ネイティブブラウザウィンドウを作成するモジュール
 const BrowserWindow = electron.BrowserWindow;
+
+// プロセス間通信
+// http://electron.atom.io/docs/api/ipc-main/
+// const ipcMain = electron.ipcMain;
+
+// ホットキー
+// http://electron.atom.io/docs/api/global-shortcut/
+
+// トレイ
+// http://electron.atom.io/docs/api/tray/
 
 // ウィンドウオブジェクトをグローバル参照をしておくこと。
 // しないと、ガベージコレクタにより自動的に閉じられてしまう。
 let window_list = [];
 
 function createWindow () {
+
+    // @todo 一つのウィンドウで処理をするように変更
 
     electron.screen.getAllDisplays().forEach(function(display) {
         let workArea = display.workArea;
@@ -28,7 +41,10 @@ function createWindow () {
             thickFrame : false
         });
 
+        // デバッグ時のみ
         // win.setAlwaysOnTop(true);
+
+        // @todo ウィンドウサイズが縮小されるはずなのでカット
         //win.maximize();
 
         win.loadURL(`file://${__dirname}/cupture/cupture.html`);
