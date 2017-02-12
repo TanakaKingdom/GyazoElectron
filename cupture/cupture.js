@@ -3,6 +3,9 @@
 const WHICH_CLICK_LEFT = 1;
 const WHICH_CLICK_RIGHT = 3;
 
+// http://faq.creasus.net/04/0131/CharCode.html
+const KEY_CODE_ESC = 27;
+
 $(function(){
     let is_mousedown = false;
     let from_point;
@@ -27,9 +30,15 @@ $(function(){
         ;
     };
 
-    $('body').on('mousedown', function (ev) {
+    let cancelCupture = function () {
+        require('electron').ipcRenderer.sendSync('cancel-capture');
+    };
+
+    // マウスクリック
+    $('body').on('mousedown', (ev) => {
         if (ev.which == WHICH_CLICK_RIGHT) {
-            // 処理やめる
+            cancelCupture();
+            return;
         }
         
         if (is_mousedown) {
@@ -46,7 +55,8 @@ $(function(){
         is_mousedown = true;
     });
 
-    $('body').on('mousemove', function (ev) {
+    // ドラッグ中
+    $('body').on('mousemove', (ev) => {
         if (! is_mousedown) {
             return;
         }
@@ -56,7 +66,8 @@ $(function(){
         });
     });
 
-    $('body').on('mouseup', function (ev) {
+    // ドロップ
+    $('body').on('mouseup', (ev) => {
         if (! is_mousedown) {
             return;
         }
@@ -66,5 +77,15 @@ $(function(){
         // @todo 画像送る
 
         is_mousedown = false;
+    });
+
+    // キーボードイベント
+    $('body').on('keyup', (ev) => {
+        console.log(ev);
+
+        if (ev.keyCode == KEY_CODE_ESC) {
+            cancelCupture();
+            return;
+        }
     });
 });

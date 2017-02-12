@@ -9,7 +9,7 @@ const BrowserWindow = electron.BrowserWindow;
 
 // プロセス間通信
 // http://electron.atom.io/docs/api/ipc-main/
-// const ipcMain = electron.ipcMain;
+const ipcMain = electron.ipcMain;
 
 // ホットキー
 // http://electron.atom.io/docs/api/global-shortcut/
@@ -40,9 +40,9 @@ function createWindow () {
     });    
 
     // ブラウザウィンドウの作成
-    let win = new BrowserWindow({
-        x: workArea.x - 50,
-        y: workArea.y - 50,
+    win = new BrowserWindow({
+        x: workArea.x - 100,
+        y: workArea.y - 100,
         frame: false,
         transparent: true,
         resizable: false,
@@ -52,7 +52,7 @@ function createWindow () {
     });
 
     // コンストラクタで指定すると enableLargerThanScreen が利かないのでここで指定する
-    win.setSize(workArea.width + 100, workArea.height + 100);
+    win.setSize(workArea.width + 200, workArea.height + 200);
 
     // デバッグ時のみ
     // win.setAlwaysOnTop(true);
@@ -88,5 +88,7 @@ app.on('activate', () => {
     }
 })
 
-// このファイルでアプリケーション固有のメインプロセスのコードを読み込むことができる。
-// ファイルを別に分けておいてここでrequireすることもできる。
+ipcMain.on ('cancel-capture', (event, arg) => {
+    // @todo Trayに入れる処理が完了次第Windowをhideするだけに変更する
+    app.quit();
+});
