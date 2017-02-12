@@ -30,14 +30,18 @@ $(function(){
         ;
     };
 
-    let cancelCupture = function () {
+    let exitCupture = function () {
         require('electron').ipcRenderer.sendSync('cancel-capture');
+    };
+
+    let execCupture = function () {
+        // http://qiita.com/Quramy/items/df6415f832a4339716f0
     };
 
     // マウスクリック
     $('body').on('mousedown', (ev) => {
         if (ev.which == WHICH_CLICK_RIGHT) {
-            cancelCupture();
+            exitCupture();
             return;
         }
         
@@ -75,16 +79,15 @@ $(function(){
         $('.drag_area').hide();
 
         // @todo 画像送る
+        execCupture();
 
         is_mousedown = false;
     });
 
     // キーボードイベント
     $('body').on('keyup', (ev) => {
-        console.log(ev);
-
         if (ev.keyCode == KEY_CODE_ESC) {
-            cancelCupture();
+            exitCupture();
             return;
         }
     });

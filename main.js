@@ -54,8 +54,11 @@ function createWindow () {
     // コンストラクタで指定すると enableLargerThanScreen が利かないのでここで指定する
     win.setSize(workArea.width + 200, workArea.height + 200);
 
-    // デバッグ時のみ
+    // デバッグ時のみコメントアウト
     // win.setAlwaysOnTop(true);
+
+    // setIgnoreMouseEvents() を使うことでshow() hide() 切り替える必要がなくなる
+    win.setIgnoreMouseEvents(true);
 
     win.loadURL(`file://${__dirname}/cupture/cupture.html`);
 
