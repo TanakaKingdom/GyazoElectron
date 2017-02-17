@@ -60,7 +60,7 @@ function createWindow() {
 
     // デバッグ時のみ
     
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools({mode: "undocked"});
 
 
     // setIgnoreMouseEvents() を使うことでshow() hide() 切り替える必要がなくなる

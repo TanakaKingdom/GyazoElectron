@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "main": "main.js",
   "dependencies": {
+    "data-uri-to-buffer": "0.0.4",
     "electron": "^1.4.15",
     "fs": "0.0.1-security",
     "request": "^2.79.0"

@@ -7,6 +7,8 @@ const WHICH_CLICK_RIGHT = 3;
 const KEY_CODE_ESC = 27;
 
 const electron = require('electron');
+const dataUriToBuffer = require('data-uri-to-buffer');
+const fs = require('fs');
 
 $(function () {
     let is_mousedown = false;
@@ -36,51 +38,61 @@ $(function () {
     };
 
     let execCupture = function (to_point) {
-        let area = calcArea(from_point, to_point);
-        electron.ipcRenderer.sendSync('exec-capture', area);
+        // let area = calcArea(from_point, to_point);
+        // electron.ipcRenderer.sendSync('exec-capture', area);
 
-        // let desktopCapturer = require('electron').desktopCapturer;
-        // let video = document.querySelector('video');
+        let desktopCapturer = require('electron').desktopCapturer;
 
-        // // デスクトップキャプチャ
-        // desktopCapturer.getSources({
-        //     types: ['window']
-        // }, (error, sources) => {
-        //     if (error) throw error;
+        // デスクトップキャプチャ
+        desktopCapturer.getSources({
+            types: ['window']
+        }, (error, sources) => {
+            if (error) throw error;
 
-        //     for (let i = 0; i < sources.length; ++i) {
-        //         if (sources[i].name === 'Electron') {
-        //             navigator.webkitGetUserMedia({
-        //                 audio: false,
-        //                 video: {
-        //                     mandatory: {
-        //                         chromeMediaSource: 'desktop',
-        //                         chromeMediaSourceId: sources[i].id,
-        //                         minWidth: window.screen.width,
-        //                         maxWidth: window.screen.width,
-        //                         minHeight: window.screen.height,
-        //                         maxHeight: window.screen.height
-        //                     }
-        //                 }
-        //             }, (stream) => {
-        //                 video.src = URL.createObjectURL(stream);
+            for (let i = 0; i < sources.length; ++i) {
+                if (sources[i].name === 'Electron') {
+                    navigator.webkitGetUserMedia({
+                        audio: false,
+                        video: {
+                            mandatory: {
+                                chromeMediaSource: 'screen',
+                                chromeMediaSourceId: sources[i].id,
+                                minWidth: 800,
+                                maxWidth: 800,
+                                minHeight: 600,
+                                maxHeight: 600
+                            }
+                        }
+                    }, (stream) => {
+                        let video = $('video');
+                        video.attr('src', URL.createObjectURL(stream));
+                        (video[0]).onloadedmetadata = (e) => {
+                            (video[0]).play();
 
-        //                 let area = calcArea(from_point, to_point);
+                            let area = calcArea(from_point, to_point);
 
-        //                 // http://qiita.com/Quramy/items/df6415f832a4339716f0
-        //                 let canvas = document.querySelector('canvas');
-        //                 let context = canvas.getContext('2d');
-        //                 context.drawImage(video, area.left, area.top, area.width, area.height);
-        //                 let url = canvas.toDataURL();
-
-        //                 $('<img>').attr('src', url).appendTo('body');
-        //             }, (e) => {
-        //                 console.log(e);
-        //             });
-        //             return;
-        //         }
-        //     }
-        // });
+                            // http://qiita.com/Quramy/items/df6415f832a4339716f0
+                            // let canvas = $('canvas');
+                            // let context = (canvas[0]).getContext('2d');
+                            // context.drawImage(video[0], 0, 0, 800, 600);
+                            // let url = (canvas[0]).toDataURL();
+                            // fs.writeFile('hoge.png', dataUriToBuffer(url), (err) => {
+                            //     if (err) {
+                            //         console.log(err)
+                            //     }                       
+                            //     video = null;
+                            //     canvas = null;
+                            // });
+                        };
+                        
+                       
+                    }, (e) => {
+                        console.log(e);
+                    });
+                    return;
+                }
+            }
+        });
     };
 
     // マウスクリック
