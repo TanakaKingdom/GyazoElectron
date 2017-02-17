@@ -11,12 +11,7 @@ const BrowserWindow = electron.BrowserWindow;
 // http://electron.atom.io/docs/api/ipc-main/
 const ipcMain = electron.ipcMain;
 
-// キャプチャモジュール
-var screencapture = require('screencapture');
-
 var fs = require('fs');
-
-var PNGCrop = require('png-crop');
 
 // ホットキー
 // http://electron.atom.io/docs/api/global-shortcut/
@@ -32,42 +27,39 @@ let isDebug = (typeof process.env.NODE_ENV) != 'undefined' && process.env.NODE_E
 
 function createWindow() {
 
-    let workArea;
+    // let workArea;
 
-    electron.screen.getAllDisplays().forEach(function (display) {
-        if (workArea == null) {
-            workArea = display.workArea;
-            return;
-        }
+    // electron.screen.getAllDisplays().forEach(function (display) {
+    //     if (workArea == null) {
+    //         workArea = display.workArea;
+    //         return;
+    //     }
 
-        workArea = {
-            x: Math.min(workArea.x, display.workArea.x),
-            y: Math.min(workArea.y, display.workArea.y),
-            width: workArea.width + display.workArea.width,
-            height: workArea.height + display.workArea.height
-        };
-    });
+    //     workArea = {
+    //         x: Math.min(workArea.x, display.workArea.x),
+    //         y: Math.min(workArea.y, display.workArea.y),
+    //         width: workArea.width + display.workArea.width,
+    //         height: workArea.height + display.workArea.height
+    //     };
+    // });
 
     // ブラウザウィンドウの作成
     win = new BrowserWindow({
-        x: workArea.x - 100,
-        y: workArea.y - 100,
-        frame: false,
         transparent: true,
         resizable: false,
         titleBarStyle: 'hidden',
+        frame: false,
         thickFrame: false,
         enableLargerThanScreen: true
     });
 
     // コンストラクタで指定すると enableLargerThanScreen が利かないのでここで指定する
-    win.setSize(workArea.width + 200, workArea.height + 200);
+    win.setSize(800, 600);
 
-    win.setAlwaysOnTop(true);
+    // win.setAlwaysOnTop(true);
 
     // デバッグ時のみ
     
-    // win.maximize();
     // win.webContents.openDevTools();
 
 
@@ -112,24 +104,5 @@ ipcMain.on('cancel-capture', (event, arg) => {
 });
 
 ipcMain.on('exec-capture', (event, arg) => {
-    screencapture(function (err, imagePath) {
-        if (err || imagePath == null) {
-            console.error('screencapture failed:', err);
-            dialog.showErrorBox("Error", "screencapture failed " + err)
-            app.quit()
-            return
-        }
-        console.log(imagePath)
-        PNGCrop.crop(imagePath, imagePath, arg, function (err) {
-            if (err) {
-                console.error('crop image failed:', err)
-                dialog.showErrorBox("Error", "crop image failed")
-                app.quit();
-                return
-            }
-
-            console.log(imagePath);
-        });
-    });
-    event.returnValue = 'exec';
+    event.returnValue = 'event';
 });

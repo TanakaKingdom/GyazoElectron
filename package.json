@@ -5,8 +5,6 @@
   "dependencies": {
     "electron": "^1.4.15",
     "fs": "0.0.1-security",
-    "png-crop": "0.0.1",
-    "request": "^2.79.0",
-    "screencapture": "^0.3.0"
+    "request": "^2.79.0"
   }
 }
